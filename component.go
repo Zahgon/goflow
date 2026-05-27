@@ -12,14 +12,4 @@ type Done struct{}
 type Wait chan Done
 
 // Run the component process.
-func Run(c Component) Wait {
-	wait := make(Wait)
-
-	go func() {
-		c.Process()
-
-		wait <- Done{}
-	}()
-
-	return wait
-}
+func Run(c Component) Wait { _ = "STUB: not implemented"; return *new(Wait) }

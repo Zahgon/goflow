@@ -2,7 +2,6 @@
 package goflow
 
 import (
-	"fmt"
 	"reflect"
 	"sync"
 )
@@ -27,80 +26,47 @@ type Graph struct {
 }
 
 // NewGraph returns a new initialized empty graph instance.
-func NewGraph(config ...GraphConfig) *Graph {
-	conf := GraphConfig{}
-	if len(config) == 1 {
-		conf = config[0]
-	}
-
-	return &Graph{
-		conf:                   conf,
-		waitGrp:                new(sync.WaitGroup),
-		procs:                  make(map[string]any),
-		inPorts:                make(map[string]port),
-		outPorts:               make(map[string]port),
-		chanListenersCount:     make(map[uintptr]uint),
-		chanListenersCountLock: new(sync.Mutex),
-	}
-}
+func NewGraph(config ...GraphConfig) *Graph { _ = "STUB: not implemented"; return nil }
 
 // NewDefaultGraph is a ComponentConstructor for the factory.
 func NewDefaultGraph() any {
-	return NewGraph()
-}
+	_ = "STUB: not implemented"
 
-// // Register an empty graph component in the registry
-// func init() {
-// 	Register("Graph", NewDefaultGraph)
-// 	Annotate("Graph", ComponentInfo{
-// 		Description: "A clear graph",
-// 		Icon:        "cogs",
-// 	})
-// }
+	// // Register an empty graph component in the registry
+	//
+	//	func init() {
+	//		Register("Graph", NewDefaultGraph)
+	//		Annotate("Graph", ComponentInfo{
+	//			Description: "A clear graph",
+	//			Icon:        "cogs",
+	//		})
+	//	}
+	return *new(any)
+}
 
 // Add adds a new process with a given name to the network.
 func (n *Graph) Add(name string, c any) error {
+	_ = "STUB: not implemented"
 	// c should be either graph or a component
-	_, isComponent := c.(Component)
-	_, isGraph := c.(*Graph)
-
-	if !isComponent && !isGraph {
-		return fmt.Errorf("could not add process '%s': instance is neither Component nor Graph", name)
-	}
-	// Add to the map of processes
-	n.procs[name] = c
-
 	return nil
 }
 
+// Add to the map of processes
+
 // AddGraph adds a new blank graph instance to a network. That instance can
 // be modified then at run-time.
-func (n *Graph) AddGraph(name string) error {
-	return n.Add(name, NewDefaultGraph())
-}
+func (n *Graph) AddGraph(name string) error { _ = "STUB: not implemented"; return nil }
 
 // AddNew creates a new process instance using component factory and adds it to the network.
 func (n *Graph) AddNew(processName string, componentName string, f *Factory) error {
-	proc, err := f.Create(componentName)
-	if err != nil {
-		return err
-	}
-
-	return n.Add(processName, proc)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Remove deletes a process from the graph. First it stops the process if running.
 // Then it disconnects it from other processes and removes the connections from
 // the graph. Then it drops the process itself.
-func (n *Graph) Remove(processName string) error {
-	if _, exists := n.procs[processName]; !exists {
-		return fmt.Errorf("could not remove process: '%s' does not exist", processName)
-	}
-
-	delete(n.procs, processName)
-
-	return nil
-}
+func (n *Graph) Remove(processName string) error { _ = "STUB: not implemented"; return nil }
 
 // // Rename changes a process name in all connections, external ports, IIPs and the
 // // graph itself.
@@ -154,59 +120,13 @@ func (n *Graph) Remove(processName string) error {
 // }
 
 // Process runs the network.
-func (n *Graph) Process() {
-	err := n.sendIIPs()
-	if err != nil {
-		// TODO provide a nicer way to handle graph errors
-		panic(err)
-	}
+func (n *Graph) Process() { _ = "STUB: not implemented"; return }
 
-	for _, i := range n.procs {
-		c, ok := i.(Component)
-		if !ok {
-			continue
-		}
-
-		n.waitGrp.Add(1)
-
-		w := Run(c)
-		proc := i
-
-		go func() {
-			<-w
-			n.closeProcOuts(proc)
-			n.waitGrp.Done()
-		}()
-	}
-
-	n.waitGrp.Wait()
-}
+// TODO provide a nicer way to handle graph errors
 
 // closeChan closes a channel safely, ensuring it is only closed once.
 // The sync.Map guards against double-close when multiple goroutines
 // share the same underlying channel (e.g. fan-in, or IIP + process output).
-func (n *Graph) closeChan(c reflect.Value) {
-	ptr := c.Pointer()
-	_, loaded := n.closedChans.LoadOrStore(ptr, struct{}{})
+func (n *Graph) closeChan(c reflect.Value) { _ = "STUB: not implemented"; return }
 
-	if !loaded {
-		c.Close()
-	}
-}
-
-func (n *Graph) closeProcOuts(proc any) {
-	val := reflect.ValueOf(proc).Elem()
-	for i := 0; i < val.NumField(); i++ {
-		field := val.Field(i)
-		fieldType := field.Type()
-
-		if !field.IsValid() || field.Kind() != reflect.Chan || !field.CanSet() ||
-			fieldType.ChanDir()&reflect.SendDir == 0 || fieldType.ChanDir()&reflect.RecvDir != 0 {
-			continue
-		}
-
-		if !field.IsNil() && n.decChanListenersCount(field) {
-			n.closeChan(field)
-		}
-	}
-}
+func (n *Graph) closeProcOuts(proc any) { _ = "STUB: not implemented"; return }

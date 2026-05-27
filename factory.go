@@ -1,7 +1,5 @@
 package goflow
 
-import "fmt"
-
 // Factory registers components and creates their instances at run-time.
 // Not safe for concurrent use.
 type Factory struct {
@@ -18,25 +16,11 @@ type registryEntry struct {
 type Constructor func() (interface{}, error)
 
 // NewFactory creates a new component Factory instance.
-func NewFactory() *Factory {
-	return &Factory{
-		registry: make(map[string]registryEntry),
-	}
-}
+func NewFactory() *Factory { _ = "STUB: not implemented"; return nil }
 
 // Register registers a component so that it can be instantiated at run-time.
 func (f *Factory) Register(componentName string, constructor Constructor) error {
-	if _, exists := f.registry[componentName]; exists {
-		return fmt.Errorf("registry error: component '%s' already registered", componentName)
-	}
-
-	f.registry[componentName] = registryEntry{
-		constructor: constructor,
-		info: ComponentInfo{
-			Name: componentName,
-		},
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -48,38 +32,18 @@ type Annotation struct {
 
 // Annotate adds human-readable documentation for a component to the runtime.
 func (f *Factory) Annotate(componentName string, annotation Annotation) error {
-	entry, exists := f.registry[componentName]
-	if !exists {
-		return fmt.Errorf("registry annotation error: component '%s' is not registered", componentName)
-	}
-
-	entry.info.Description = annotation.Description
-	entry.info.Icon = annotation.Icon
-	f.registry[componentName] = entry
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // Unregister removes a component with a given name from the component registry and returns true
 // or returns false if no such component is registered.
-func (f *Factory) Unregister(componentName string) error {
-	if _, exists := f.registry[componentName]; !exists {
-		return fmt.Errorf("registry error: component '%s' is not registered", componentName)
-	}
-
-	delete(f.registry, componentName)
-
-	return nil
-}
+func (f *Factory) Unregister(componentName string) error { _ = "STUB: not implemented"; return nil }
 
 // Create creates a new instance of a component registered under a specific name.
 func (f *Factory) Create(componentName string) (any, error) {
-	info, exists := f.registry[componentName]
-	if !exists {
-		return nil, fmt.Errorf("factory error: component '%s' does not exist", componentName)
-	}
-
-	return info.constructor()
+	_ = "STUB: not implemented"
+	return *new(any), nil
 }
 
 // // UpdateComponentInfo extracts run-time information about a

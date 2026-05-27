@@ -1,7 +1,6 @@
 package goflow
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -13,10 +12,7 @@ type port struct {
 }
 
 // MapInPort adds an inport to the net and maps it to a contained proc's port.
-func (n *Graph) MapInPort(name, procName, procPort string) {
-	addr := parseAddress(procName, procPort)
-	n.inPorts[name] = port{addr: addr}
-}
+func (n *Graph) MapInPort(name, procName, procPort string) { _ = "STUB: not implemented"; return }
 
 // // AnnotateInPort sets optional run-time annotation for the port utilized by
 // // runtimes and FBP protocol clients.
@@ -39,10 +35,7 @@ func (n *Graph) MapInPort(name, procName, procPort string) {
 // }
 
 // MapOutPort adds an outport to the net and maps it to a contained proc's port.
-func (n *Graph) MapOutPort(name, procName, procPort string) {
-	addr := parseAddress(procName, procPort)
-	n.outPorts[name] = port{addr: addr}
-}
+func (n *Graph) MapOutPort(name, procName, procPort string) { _ = "STUB: not implemented"; return }
 
 // // AnnotateOutPort sets optional run-time annotation for the port utilized by
 // // runtimes and FBP protocol clients.
@@ -65,51 +58,20 @@ func (n *Graph) MapOutPort(name, procName, procPort string) {
 // }
 
 // SetInPort assigns a channel to a network's inport to talk to the outer world.
-func (n *Graph) SetInPort(name string, channel any) error {
-	return n.setGraphPort(name, channel, reflect.RecvDir)
-}
+func (n *Graph) SetInPort(name string, channel any) error { _ = "STUB: not implemented"; return nil }
 
 // SetOutPort assigns a channel to a network's outport to talk to the outer world.
 // It returns true on success or false if the outport cannot be set.
-func (n *Graph) SetOutPort(name string, channel any) error {
-	return n.setGraphPort(name, channel, reflect.SendDir)
-}
+func (n *Graph) SetOutPort(name string, channel any) error { _ = "STUB: not implemented"; return nil }
 
 func (n *Graph) setGraphPort(name string, channel any, dir reflect.ChanDir) error {
-	var (
-		ports    map[string]port
-		dirDescr string
-	)
-
-	if dir == reflect.SendDir {
-		ports = n.outPorts
-		dirDescr = "out"
-	} else {
-		ports = n.inPorts
-		dirDescr = "in"
-	}
-
-	p, ok := ports[name]
-	if !ok {
-		return fmt.Errorf("setGraphPort: %s port '%s' not defined", dirDescr, name)
-	}
-
-	// Try to attach it
-	port, err := n.getProcPort(p.addr.proc, p.addr.port, dir)
-	if err != nil {
-		return fmt.Errorf("setGraphPort: cannot set %s port '%s': %w", dirDescr, name, err)
-	}
-
-	if _, err = attachPort(port, p.addr, dir, reflect.ValueOf(channel), n.conf.BufferSize); err != nil {
-		return fmt.Errorf("setGraphPort: cannot attach %s port '%s': %w", dirDescr, name, err)
-	}
-
-	// Save it in inPorts to be used with IIPs if needed
-	p.channel = reflect.ValueOf(channel)
-	ports[name] = p
-
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Try to attach it
+
+// Save it in inPorts to be used with IIPs if needed
 
 // // RenameInPort changes graph's inport name
 // func (n *Graph) RenameInPort(oldName, newName string) bool {
